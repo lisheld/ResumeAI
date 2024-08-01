@@ -60,7 +60,9 @@ def filter_bullet_points(html):
 # Apply the functions to the html data and create new columns
 data['Section_Titles'] = data['Resume_html'].apply(filter_section_titles)
 data['Bullet_Points'] = data['Resume_html'].apply(filter_bullet_points)
+data['Best_Bullet'] = data['Bullet_Points'].apply(lambda x: max(x, key=len) if x else None)
 
 # Print the first 5 rows of the new columns
 print(data['Section_Titles'].head())
 print(data['Bullet_Points'].head())
+print(data['Best_Bullet'].head())
