@@ -57,15 +57,33 @@ def filter_bullet_points(html):
         bullet_points.append(extract_bullet_points(match))
     return bullet_points
 
+def filter_list_of_bullets(html):
+    """
+    Filter out all of the unordered lists in
+    a string of html, and then filter out all
+    of the bullet points in each list, and
+    return a list of lists where each element
+    in the inner list is a bullet point and
+    outer list is a group of bullet points.
+    """
+    list_of_bullets = []
+    pattern = r'<ul>(.*?)</ul>'
+    matches = re.findall(pattern, html)
+    for match in matches:
+        list_of_bullets.append(filter_bullet_points(match))
+    return list_of_bullets
+
 if __name__ == "__main__":
     # # Apply the functions to the html data and create new columns
     # data['Section_Titles'] = data['Resume_html'].apply(filter_section_titles)
     # data['Bullet_Points'] = data['Resume_html'].apply(filter_bullet_points)
     # data['Best_Bullet'] = data['Bullet_Points'].apply(lambda x: max(x, key=len) if x else None)
+    # data['List_of_Bullets'] = data['Resume_html'].apply(filter_list_of_bullets)
 
     # # Print the first 5 rows of the new columns
     # print(data['Section_Titles'].head())
     # print(data['Bullet_Points'].head())
     # print(data['Best_Bullet'].head())
+    # print(data['List_of_Bullets'].head())
 
     print(data.iloc[0]['Resume_html'])
