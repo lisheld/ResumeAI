@@ -73,17 +73,43 @@ def filter_list_of_bullets(html):
         list_of_bullets.append(filter_bullet_points(match))
     return list_of_bullets
 
+def filter_expreience(html):
+    """
+    Filter out the experience section from the
+    html and return it as a string.
+    """
+    result = {}
+    pattern = r'jobtitle(.*?)</span>'
+    other_pattern = r'jobline(.*?)</span>'
+    job_titles = re.findall(pattern, html)
+    job_descriptions = re.findall(other_pattern, html)
+    if len(job_titles) == len(job_descriptions):
+        for title_html, bullet_html in zip(job_titles, job_descriptions):
+            title = extract_title(title_html)
+            bullet_points = filter_bullet_points(bullet_html)
+            result[title] = bullet_points
+    return result
+
 if __name__ == "__main__":
     # # Apply the functions to the html data and create new columns
     # data['Section_Titles'] = data['Resume_html'].apply(filter_section_titles)
     # data['Bullet_Points'] = data['Resume_html'].apply(filter_bullet_points)
     # data['Best_Bullet'] = data['Bullet_Points'].apply(lambda x: max(x, key=len) if x else None)
     # data['List_of_Bullets'] = data['Resume_html'].apply(filter_list_of_bullets)
+    # data['Experience'] = data['Resume_html'].apply(filter_expreience)
 
     # # Print the first 5 rows of the new columns
     # print(data['Section_Titles'].head())
     # print(data['Bullet_Points'].head())
     # print(data['Best_Bullet'].head())
     # print(data['List_of_Bullets'].head())
+    # print(data['Experience'].head())
 
-    print(data.iloc[0]['Resume_html'])
+    # print(data.iloc[0]['Resume_html'])
+    data['Experience'] = data['Resume_html'].apply(filter_expreience)
+
+    experience = []
+    for i in range(200):
+        if data.iloc[i]["Experience"]:
+            experience.append(data.iloc[i]["Experience"])
+    print(experience)
