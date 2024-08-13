@@ -3,7 +3,7 @@ import tiktoken # for token counting
 import numpy as np
 from collections import defaultdict
 
-data_path = "data/toy_chat_fine_tuning.jsonl"
+data_path = "bulletpointdata.jsonl"
 
 # Load the dataset
 with open(data_path, 'r', encoding='utf-8') as f:
