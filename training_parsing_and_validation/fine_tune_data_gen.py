@@ -1,14 +1,9 @@
-# from data import bullet_dict
 from vars import client
 from helpers import Summary
 from openai import OpenAI
 import jsonlines
+import json
 
-
-
-bullet_dict = {
-    "MIT Heavy Ion Lab - Researcher": ["Evaluated and tested 20 cutting-edge machine-learning models on heavy-ion collision data", "Extracted trends in jets from over 1 million heavy-ion collisions using ROOT and C++","Used extracted jet trends to improve model architecture using CERN’s b-hive framework"]
-}
 
 
 
@@ -29,14 +24,18 @@ def generate_full(bullet_points):
         return message.refusal
 
 if __name__ == "__main__":
+    
+    with open('experience.json', 'r') as file:
+        bullet_dict = json.load(file)
+    
     finetuning_data = []
 
     for title, bullet_points in bullet_dict.items():
         finetuning_data.append(
             {
                 "messages": [
-                    {"role": "system", "content": "You are an expert in creating resume bullet points from a job description. Given a job title and description, return a list of bullet points that describe the responsibilities and qualifications for the role."},
-                    {"role": "user", "content": generate_full(bullet_points)},
+                    {"role": "system", "content": "You are an expert in creating resume bullet points from a job description. Given a job title and description, return a list of 2-4 bullet points that describe the responsibilities and qualifications for the role."},
+                    {"role": "user", "content": f"Title: {title}\nDescription:\n{generate_full(bullet_points)}"},
                     {"role": "assistant", "content": '\n'.join(bullet_points)}
                 ]
             }

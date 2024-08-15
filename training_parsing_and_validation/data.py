@@ -1,5 +1,7 @@
 import pandas as pd
 import re
+import json
+from helpers import inch_len
 
 data = pd.read_csv('./Resume.csv')
 
@@ -90,6 +92,23 @@ def filter_expreience(html):
             result[title] = bullet_points
     return result
 
+data['Experience'] = data['Resume_html'].apply(filter_expreience)
+
+experience = {}
+
+
+for resume in data['Experience']:
+    if resume:
+        for title, bullet_points in resume.items():
+            if 2 <= len(bullet_points) <=4 and all(4.5 < inch_len(point, 10) < 6.2 for point in bullet_points):
+                experience[title] = bullet_points
+        if len(experience) > 200:
+                break
+print(len(experience))
+
+# Save experience as a JSON file
+with open('experience.json', 'w') as f:
+    json.dump(experience, f)
 if __name__ == "__main__":
     # # Apply the functions to the html data and create new columns
     # data['Section_Titles'] = data['Resume_html'].apply(filter_section_titles)
@@ -106,10 +125,4 @@ if __name__ == "__main__":
     # print(data['Experience'].head())
 
     # print(data.iloc[0]['Resume_html'])
-    data['Experience'] = data['Resume_html'].apply(filter_expreience)
-
-    experience = []
-    for i in range(200):
-        if data.iloc[i]["Experience"]:
-            experience.append(data.iloc[i]["Experience"])
-    print(experience)
+    ...
